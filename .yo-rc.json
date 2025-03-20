@@ -1,0 +1,16 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "alpscraft_cms",
+    "clientFramework": "react",
+    "entities": ["User", "PostCategory", "BlogPost", "StaticPage", "UiSection", "UiSectionElement"],
+    "jhipsterVersion": "8.9.0",
+    "jwtSecretKey": "ZTg2MzQ1YTc0NmUxNzlmMGIxZTljNTY1ZDliMTczMzg0MWEyYTlkZjVjMmZkOGYwZmZmNzNhMDY5NjRkZmZmNGY3MTZjYzQ0YjgxMjU1YzM1MWRmNTNhYjRkOTU4YjFhZjNjN2U4M2ZhMDhiMjQ3YmUzNWFlMTFmMzdiM2IxZjA=",
+    "languages": ["de"],
+    "lastLiquibaseTimestamp": 1742497166000,
+    "nativeLanguage": "de",
+    "packageName": "at.alpscraft",
+    "prodDatabaseType": "postgresql"
+  }
+}

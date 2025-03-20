@@ -1,0 +1,26 @@
+{
+  "alpscraftCmsApp": {
+    "staticPage": {
+      "home": {
+        "title": "Static Pages",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Static Page erstellen",
+        "createOrEditLabel": "Static Page erstellen oder bearbeiten",
+        "notFound": "Keine Static Pages gefunden"
+      },
+      "created": "Static Page erstellt mit ID {{ param }}",
+      "updated": "Static Page aktualisiert mit ID {{ param }}",
+      "deleted": "Static Page gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Static Page {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Static Page"
+      },
+      "id": "ID",
+      "title": "Title",
+      "content": "Content",
+      "author": "Author"
+    }
+  }
+}

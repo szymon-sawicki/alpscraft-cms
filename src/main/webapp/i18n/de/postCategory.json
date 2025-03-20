@@ -1,0 +1,25 @@
+{
+  "alpscraftCmsApp": {
+    "postCategory": {
+      "home": {
+        "title": "Post Categories",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Post Category erstellen",
+        "createOrEditLabel": "Post Category erstellen oder bearbeiten",
+        "notFound": "Keine Post Categories gefunden"
+      },
+      "created": "Post Category erstellt mit ID {{ param }}",
+      "updated": "Post Category aktualisiert mit ID {{ param }}",
+      "deleted": "Post Category gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Post Category {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Post Category"
+      },
+      "id": "ID",
+      "name": "Name",
+      "description": "Description"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity UiSectionElement.
+    -->
+    <changeSet id="20250320185926-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="ui_section_id"
+                                 baseTableName="ui_section_element"
+                                 constraintName="fk_ui_section_element__ui_section_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ui_section"
+                                 />
+    </changeSet>
+</databaseChangeLog>

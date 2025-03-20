@@ -1,0 +1,80 @@
+application {
+  config {
+    baseName alpscraft_cms
+    applicationType monolith
+    packageName at.alpscraft
+    authenticationType jwt
+    prodDatabaseType postgresql
+    clientFramework react
+    nativeLanguage de
+  }
+  entities *
+}
+
+entity User {
+  username String required
+  password String required
+  mail String required
+  role Role
+}
+
+enum Role {
+  ADMIN, EDITOR
+}
+
+entity PostCategory {
+  name String required
+  description String
+}
+
+entity BlogPost {
+  title String required
+  content String required
+  // Removed the entity references - these will be handled by relationships
+}
+
+entity StaticPage {
+  title String required
+  content String required
+  // Removed the entity reference - this will be handled by relationships
+}
+
+
+entity UiSection {
+  title SectionType required
+  cssClass String
+  content String required
+  // Removed the entity reference - this will be handled by relationships
+}
+
+
+entity UiSectionElement {
+  title SectionType required
+  content String required
+  // Removed the entity reference - this will be handled by relationships
+}
+
+
+enum SectionType {
+  HEADER, MAIN, SIDE, FOOTER
+}
+
+enum SectionElementType {
+  INTERN_LINK, EXTERN_LINK
+}
+
+// Define relationships correctly
+relationship ManyToOne {
+  BlogPost{category} to PostCategory
+  BlogPost{author} to User
+  StaticPage{author} to User
+  UiSectionElement{uiSection} to UiSection
+}
+
+// The OneToMany relationships are already defined by the ManyToOne relationships above
+// But you could also express them explicitly like this:
+// relationship OneToMany {
+//   User{blogPosts} to BlogPost{author}
+//   User{staticPages} to StaticPage{author}
+//   PostCategory{blogPosts} to BlogPost{category}
+// }

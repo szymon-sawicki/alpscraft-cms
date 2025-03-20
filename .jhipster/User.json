@@ -1,0 +1,32 @@
+{
+  "annotations": {
+    "changelogDate": "20250320185426"
+  },
+  "applications": ["alpscraft_cms"],
+  "entityTableName": "jhi_user",
+  "fields": [
+    {
+      "fieldName": "username",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "password",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "mail",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "role",
+      "fieldType": "Role",
+      "fieldValues": "ADMIN,EDITOR"
+    }
+  ],
+  "name": "User",
+  "relationships": [],
+  "searchEngine": "no"
+}

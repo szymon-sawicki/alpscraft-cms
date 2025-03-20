@@ -1,0 +1,26 @@
+{
+  "alpscraftCmsApp": {
+    "uiSection": {
+      "home": {
+        "title": "Ui Sections",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Ui Section erstellen",
+        "createOrEditLabel": "Ui Section erstellen oder bearbeiten",
+        "notFound": "Keine Ui Sections gefunden"
+      },
+      "created": "Ui Section erstellt mit ID {{ param }}",
+      "updated": "Ui Section aktualisiert mit ID {{ param }}",
+      "deleted": "Ui Section gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Ui Section {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Ui Section"
+      },
+      "id": "ID",
+      "title": "Title",
+      "cssClass": "Css Class",
+      "content": "Content"
+    }
+  }
+}

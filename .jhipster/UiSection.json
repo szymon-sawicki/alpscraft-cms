@@ -1,0 +1,26 @@
+{
+  "annotations": {
+    "changelogDate": "20250320185826"
+  },
+  "applications": ["alpscraft_cms"],
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "SectionType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "HEADER,MAIN,SIDE,FOOTER"
+    },
+    {
+      "fieldName": "cssClass",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "UiSection",
+  "relationships": [],
+  "searchEngine": "no"
+}

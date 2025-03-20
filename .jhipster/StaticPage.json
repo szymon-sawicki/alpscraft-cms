@@ -1,0 +1,28 @@
+{
+  "annotations": {
+    "changelogDate": "20250320185726"
+  },
+  "applications": ["alpscraft_cms"],
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "StaticPage",
+  "relationships": [
+    {
+      "otherEntityName": "user",
+      "relationshipName": "author",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

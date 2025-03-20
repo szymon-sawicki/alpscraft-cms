@@ -1,0 +1,27 @@
+{
+  "alpscraftCmsApp": {
+    "blogPost": {
+      "home": {
+        "title": "Blog Posts",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Blog Post erstellen",
+        "createOrEditLabel": "Blog Post erstellen oder bearbeiten",
+        "notFound": "Keine Blog Posts gefunden"
+      },
+      "created": "Blog Post erstellt mit ID {{ param }}",
+      "updated": "Blog Post aktualisiert mit ID {{ param }}",
+      "deleted": "Blog Post gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Blog Post {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Blog Post"
+      },
+      "id": "ID",
+      "title": "Title",
+      "content": "Content",
+      "category": "Category",
+      "author": "Author"
+    }
+  }
+}

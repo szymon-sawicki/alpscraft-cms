@@ -1,0 +1,11 @@
+{
+  "alpscraftCmsApp": {
+    "SectionType": {
+      "null": "",
+      "HEADER": "HEADER",
+      "MAIN": "MAIN",
+      "SIDE": "SIDE",
+      "FOOTER": "FOOTER"
+    }
+  }
+}

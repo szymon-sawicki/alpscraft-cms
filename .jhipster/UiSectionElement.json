@@ -1,0 +1,29 @@
+{
+  "annotations": {
+    "changelogDate": "20250320185926"
+  },
+  "applications": ["alpscraft_cms"],
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "SectionType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "HEADER,MAIN,SIDE,FOOTER"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "UiSectionElement",
+  "relationships": [
+    {
+      "otherEntityName": "uiSection",
+      "relationshipName": "uiSection",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}
