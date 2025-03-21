@@ -25,7 +25,7 @@ export const BlogPostDeleteDialog = () => {
   const updateSuccess = useAppSelector(state => state.blogPost.updateSuccess);
 
   const handleClose = () => {
-    navigate('/blog-post');
+    navigate('/entities/blog-post');
   };
 
   useEffect(() => {

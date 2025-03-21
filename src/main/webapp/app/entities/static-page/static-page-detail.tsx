@@ -51,14 +51,14 @@ export const StaticPageDetail = () => {
           </dt>
           <dd>{staticPageEntity.author ? staticPageEntity.author.login : ''}</dd>
         </dl>
-        <Button tag={Link} to="/static-page" replace color="info" data-cy="entityDetailsBackButton">
+        <Button tag={Link} to="/entities/static-page" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
           </span>
         </Button>
         &nbsp;
-        <Button tag={Link} to={`/static-page/${staticPageEntity.id}/edit`} replace color="primary">
+        <Button tag={Link} to={`/entities/static-page/${staticPageEntity.id}/edit`} replace color="primary">
           <FontAwesomeIcon icon="pencil-alt" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.edit">Edit</Translate>

@@ -40,7 +40,7 @@ export const BlogPostDetail = () => {
           <dd>{blogPostEntity.title}</dd>
           <dt>
             <span id="content">
-              <Translate contentKey="alpscraftCmsApp.blogPost.content">Content</Translate>
+              <Translate contentKey="alpscraftCmsApp.blogPost.content.label">Content</Translate>
             </span>
           </dt>
           <dd>
@@ -55,14 +55,14 @@ export const BlogPostDetail = () => {
           </dt>
           <dd>{blogPostEntity.author ? blogPostEntity.author.login : ''}</dd>
         </dl>
-        <Button tag={Link} to="/blog-post" replace color="info" data-cy="entityDetailsBackButton">
+        <Button tag={Link} to="/entities/blog-post" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
           </span>
         </Button>
         &nbsp;
-        <Button tag={Link} to={`/blog-post/${blogPostEntity.id}/edit`} replace color="primary">
+        <Button tag={Link} to={`/entities/blog-post/${blogPostEntity.id}/edit`} replace color="primary">
           <FontAwesomeIcon icon="pencil-alt" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.edit">Edit</Translate>

@@ -39,9 +39,38 @@ export const getEntity = createAsyncThunk(
 export const createEntity = createAsyncThunk(
   'blogPost/create_entity',
   async (entity: IBlogPost, thunkAPI) => {
-    const result = await axios.post<IBlogPost>(apiUrl, cleanEntity(entity));
-    thunkAPI.dispatch(getEntities({}));
-    return result;
+    console.log('[CREATE] Original entity:', entity);
+
+    // Create a proper entity for the API - using the DTO format expected by the server
+    const apiEntity = {
+      title: entity.title,
+      content: entity.content,
+      categoryId: entity.category?.id || null,
+      categoryName: entity.category?.name || null,
+      authorId: entity.author?.id || null,
+      authorUsername: entity.author?.login || null,
+    };
+
+    console.log('[CREATE] API entity to be sent:', apiEntity);
+    console.log('[CREATE] API URL:', apiUrl);
+
+    try {
+      console.log('[CREATE] Sending request to:', apiUrl);
+      const result = await axios.post<IBlogPost>(apiUrl, apiEntity);
+      console.log('[CREATE] Response status:', result.status);
+      console.log('[CREATE] Response data:', result.data);
+      console.log('[CREATE] Headers:', result.headers);
+      thunkAPI.dispatch(getEntities({}));
+      return result;
+    } catch (error) {
+      console.error('[CREATE] Error creating entity:', error);
+      if (error.response) {
+        console.error('[CREATE] Error response data:', error.response.data);
+        console.error('[CREATE] Error response status:', error.response.status);
+        console.error('[CREATE] Error response headers:', error.response.headers);
+      }
+      throw error;
+    }
   },
   { serializeError: serializeAxiosError },
 );
@@ -49,9 +78,39 @@ export const createEntity = createAsyncThunk(
 export const updateEntity = createAsyncThunk(
   'blogPost/update_entity',
   async (entity: IBlogPost, thunkAPI) => {
-    const result = await axios.put<IBlogPost>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
-    thunkAPI.dispatch(getEntities({}));
-    return result;
+    console.log('[UPDATE] Original entity:', entity);
+
+    // Create a proper entity for the API - using the DTO format expected by the server
+    const apiEntity = {
+      id: entity.id,
+      title: entity.title,
+      content: entity.content,
+      categoryId: entity.category?.id || null,
+      categoryName: entity.category?.name || null,
+      authorId: entity.author?.id || null,
+      authorUsername: entity.author?.login || null,
+    };
+
+    console.log('[UPDATE] API entity to be sent:', apiEntity);
+    console.log('[UPDATE] API URL:', `${apiUrl}/${entity.id}`);
+
+    try {
+      console.log('[UPDATE] Sending request to:', `${apiUrl}/${entity.id}`);
+      const result = await axios.put<IBlogPost>(`${apiUrl}/${entity.id}`, apiEntity);
+      console.log('[UPDATE] Response status:', result.status);
+      console.log('[UPDATE] Response data:', result.data);
+      console.log('[UPDATE] Headers:', result.headers);
+      thunkAPI.dispatch(getEntities({}));
+      return result;
+    } catch (error) {
+      console.error('[UPDATE] Error updating entity:', error);
+      if (error.response) {
+        console.error('[UPDATE] Error response data:', error.response.data);
+        console.error('[UPDATE] Error response status:', error.response.status);
+        console.error('[UPDATE] Error response headers:', error.response.headers);
+      }
+      throw error;
+    }
   },
   { serializeError: serializeAxiosError },
 );

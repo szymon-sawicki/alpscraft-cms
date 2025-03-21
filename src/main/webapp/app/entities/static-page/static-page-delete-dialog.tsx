@@ -25,7 +25,7 @@ export const StaticPageDeleteDialog = () => {
   const updateSuccess = useAppSelector(state => state.staticPage.updateSuccess);
 
   const handleClose = () => {
-    navigate('/static-page');
+    navigate('/entities/static-page');
   };
 
   useEffect(() => {

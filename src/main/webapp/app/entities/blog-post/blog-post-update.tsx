@@ -1,33 +1,39 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Col, Row } from 'reactstrap';
-import { Translate, ValidatedField, ValidatedForm, translate } from 'react-jhipster';
+import { Button, Col, Row, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Translate, translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntities as getPostCategories } from 'app/entities/post-category/post-category.reducer';
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
+import { getEntities as getPostCategories } from 'app/entities/post-category/post-category.reducer';
 import { createEntity, getEntity, reset, updateEntity } from './blog-post.reducer';
 import RichTextEditor from 'app/shared/editor/rich-text-editor';
 
 export const BlogPostUpdate = () => {
   const dispatch = useAppDispatch();
-
   const navigate = useNavigate();
-
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const postCategories = useAppSelector(state => state.postCategory.entities);
   const users = useAppSelector(state => state.userManagement.users);
+  const postCategories = useAppSelector(state => state.postCategory.entities);
   const blogPostEntity = useAppSelector(state => state.blogPost.entity);
   const loading = useAppSelector(state => state.blogPost.loading);
   const updating = useAppSelector(state => state.blogPost.updating);
   const updateSuccess = useAppSelector(state => state.blogPost.updateSuccess);
 
+  const [formValues, setFormValues] = useState({
+    id: '',
+    title: '',
+    content: '',
+    categoryId: '',
+    authorId: '',
+  });
+
   const handleClose = () => {
-    navigate('/blog-post');
+    navigate('/entities/blog-post');
   };
 
   useEffect(() => {
@@ -42,38 +48,71 @@ export const BlogPostUpdate = () => {
   }, []);
 
   useEffect(() => {
-    if (updateSuccess) {
-      handleClose();
+    if (blogPostEntity && !isNew) {
+      console.log('[BlogPost] Setting form values from entity:', blogPostEntity);
+      setFormValues({
+        id: blogPostEntity.id?.toString() || '',
+        title: blogPostEntity.title || '',
+        content: blogPostEntity.content || '',
+        categoryId: blogPostEntity.category?.id?.toString() || '',
+        authorId: blogPostEntity.author?.id?.toString() || '',
+      });
     }
-  }, [updateSuccess]);
+  }, [blogPostEntity]);
 
-  const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
-    }
-
-    const entity = {
-      ...blogPostEntity,
-      ...values,
-      category: postCategories.find(it => it.id.toString() === values.category?.toString()),
-      author: users.find(it => it.id.toString() === values.author?.toString()),
-    };
-
-    if (isNew) {
-      dispatch(createEntity(entity));
-    } else {
-      dispatch(updateEntity(entity));
-    }
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+    console.log(`[BlogPost] Field ${name} changed to:`, value);
   };
 
-  const defaultValues = () =>
-    isNew
-      ? {}
-      : {
-          ...blogPostEntity,
-          category: blogPostEntity?.category?.id,
-          author: blogPostEntity?.author?.id,
-        };
+  const handleContentChange = value => {
+    setFormValues({
+      ...formValues,
+      content: value,
+    });
+    console.log('[BlogPost] Content changed to:', value);
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.log('[BlogPost] Submitting form with values:', formValues);
+
+    const entity = {
+      id: isNew ? undefined : Number(formValues.id),
+      title: formValues.title,
+      content: formValues.content,
+      category: formValues.categoryId ? { id: Number(formValues.categoryId) } : null,
+      author: formValues.authorId ? { id: Number(formValues.authorId) } : null,
+    };
+
+    console.log('[BlogPost] Entity to be saved:', entity);
+
+    if (isNew) {
+      dispatch(createEntity(entity))
+        .unwrap()
+        .then(() => {
+          console.log('[BlogPost] Navigation after successful save to:', '/entities/blog-post');
+          navigate('/entities/blog-post');
+        })
+        .catch(err => {
+          console.error('[BlogPost] Error creating entity:', err);
+        });
+    } else {
+      dispatch(updateEntity(entity))
+        .unwrap()
+        .then(() => {
+          console.log('[BlogPost] Navigation after successful save to:', '/entities/blog-post');
+          navigate('/entities/blog-post');
+        })
+        .catch(err => {
+          console.error('[BlogPost] Error updating entity:', err);
+        });
+    }
+  };
 
   return (
     <div>
@@ -89,92 +128,78 @@ export const BlogPostUpdate = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
+            <Form onSubmit={handleSubmit}>
               {!isNew ? (
-                <ValidatedField
-                  name="id"
-                  required
-                  readOnly
-                  id="blog-post-id"
-                  label={translate('global.field.id')}
-                  validate={{ required: true }}
-                />
+                <FormGroup>
+                  <Label for="blog-post-id">{translate('global.field.id')}</Label>
+                  <Input id="blog-post-id" name="id" type="text" value={formValues.id} readOnly required />
+                </FormGroup>
               ) : null}
-              <ValidatedField
-                label={translate('alpscraftCmsApp.blogPost.title')}
-                id="blog-post-title"
-                name="title"
-                data-cy="title"
-                type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
-              />
-              <Row className="mb-3">
-                <Col md="3">
-                  <label htmlFor="blog-post-content">
-                    <Translate contentKey="alpscraftCmsApp.blogPost.content.label">Content</Translate>
-                  </label>
-                </Col>
-                <Col md="9">
-                  <ValidatedField
-                    id="blog-post-content"
-                    name="content"
-                    data-cy="content"
-                    type="hidden"
-                    validate={{
-                      required: { value: true, message: translate('entity.validation.required') },
-                    }}
-                  />
+              <FormGroup>
+                <Label for="blog-post-title">{translate('alpscraftCmsApp.blogPost.title')}</Label>
+                <Input
+                  id="blog-post-title"
+                  name="title"
+                  data-cy="title"
+                  type="text"
+                  value={formValues.title}
+                  onChange={handleInputChange}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="blog-post-content">
+                  <Translate contentKey="alpscraftCmsApp.blogPost.content">Content</Translate>
+                </Label>
+                <div>
                   <RichTextEditor
-                    value={blogPostEntity.content || ''}
-                    onChange={value => {
-                      // This is a workaround since we can't directly use CustomInput
-                      const event = new Event('change', { bubbles: true });
-                      const element = document.getElementById('blog-post-content');
-                      if (element) {
-                        const input = element as HTMLInputElement;
-                        input.value = value;
-                        input.dispatchEvent(event);
-                      }
-                    }}
-                    placeholder={translate('alpscraftCmsApp.blogPost.content.placeholder')}
+                    value={formValues.content}
+                    onChange={handleContentChange}
+                    placeholder={translate('alpscraftCmsApp.blogPost.content.placeholder') || 'Write your content here...'}
                   />
-                </Col>
-              </Row>
-              <ValidatedField
-                id="blog-post-category"
-                name="category"
-                data-cy="category"
-                label={translate('alpscraftCmsApp.blogPost.category')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {postCategories
-                  ? postCategories.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.name}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <ValidatedField
-                id="blog-post-author"
-                name="author"
-                data-cy="author"
-                label={translate('alpscraftCmsApp.blogPost.author')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {users
-                  ? users.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.login}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/blog-post" replace color="info">
+                </div>
+              </FormGroup>
+              <FormGroup>
+                <Label for="blog-post-category">{translate('alpscraftCmsApp.blogPost.category')}</Label>
+                <Input
+                  id="blog-post-category"
+                  name="categoryId"
+                  data-cy="category"
+                  type="select"
+                  value={formValues.categoryId}
+                  onChange={handleInputChange}
+                >
+                  <option value="" key="0" />
+                  {postCategories
+                    ? postCategories.map(otherEntity => (
+                        <option value={otherEntity.id} key={otherEntity.id}>
+                          {otherEntity.name}
+                        </option>
+                      ))
+                    : null}
+                </Input>
+              </FormGroup>
+              <FormGroup>
+                <Label for="blog-post-author">{translate('alpscraftCmsApp.blogPost.author')}</Label>
+                <Input
+                  id="blog-post-author"
+                  name="authorId"
+                  data-cy="author"
+                  type="select"
+                  value={formValues.authorId}
+                  onChange={handleInputChange}
+                >
+                  <option value="" key="0" />
+                  {users
+                    ? users.map(otherEntity => (
+                        <option value={otherEntity.id} key={otherEntity.id}>
+                          {otherEntity.login}
+                        </option>
+                      ))
+                    : null}
+                </Input>
+              </FormGroup>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/entities/blog-post" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -187,7 +212,7 @@ export const BlogPostUpdate = () => {
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </ValidatedForm>
+            </Form>
           )}
         </Col>
       </Row>

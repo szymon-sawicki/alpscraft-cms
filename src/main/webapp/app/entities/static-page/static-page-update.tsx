@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Col, Row } from 'reactstrap';
-import { Translate, ValidatedField, ValidatedForm, translate } from 'react-jhipster';
+import { Button, Col, Row, Form, FormGroup, Label } from 'reactstrap';
+import { Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
@@ -9,12 +9,11 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
 import { createEntity, getEntity, reset, updateEntity } from './static-page.reducer';
 import RichTextEditor from 'app/shared/editor/rich-text-editor';
+import { processEditorContent } from 'app/shared/util/editor-image-processor';
 
 export const StaticPageUpdate = () => {
   const dispatch = useAppDispatch();
-
   const navigate = useNavigate();
-
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
@@ -24,8 +23,17 @@ export const StaticPageUpdate = () => {
   const updating = useAppSelector(state => state.staticPage.updating);
   const updateSuccess = useAppSelector(state => state.staticPage.updateSuccess);
 
+  const [formValues, setFormValues] = useState({
+    id: '',
+    title: '',
+    content: '',
+    author: '',
+  });
+
+  const [contentChanged, setContentChanged] = useState(false);
+
   const handleClose = () => {
-    navigate('/static-page');
+    navigate('/entities/static-page' + location.search);
   };
 
   useEffect(() => {
@@ -39,36 +47,65 @@ export const StaticPageUpdate = () => {
   }, []);
 
   useEffect(() => {
+    if (staticPageEntity && !isNew) {
+      setFormValues({
+        id: staticPageEntity.id?.toString() || '',
+        title: staticPageEntity.title || '',
+        content: staticPageEntity.content || '',
+        author: staticPageEntity.author?.id?.toString() || '',
+      });
+    }
+  }, [staticPageEntity]);
+
+  useEffect(() => {
     if (updateSuccess) {
       handleClose();
     }
   }, [updateSuccess]);
 
-  const saveEntity = values => {
-    if (values.id !== undefined && typeof values.id !== 'number') {
-      values.id = Number(values.id);
-    }
-
-    const entity = {
-      ...staticPageEntity,
-      ...values,
-      author: users.find(it => it.id.toString() === values.author?.toString()),
-    };
-
-    if (isNew) {
-      dispatch(createEntity(entity));
-    } else {
-      dispatch(updateEntity(entity));
-    }
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
   };
 
-  const defaultValues = () =>
-    isNew
-      ? {}
-      : {
-          ...staticPageEntity,
-          author: staticPageEntity?.author?.id,
-        };
+  const handleContentChange = value => {
+    setContentChanged(true);
+    setFormValues({
+      ...formValues,
+      content: value,
+    });
+    console.log('[StaticPage] Content changed to:', value);
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    console.log('[StaticPage] Submitting form with values:', formValues);
+
+    try {
+      // Process any base64 images in the content and replace with URLs
+      const processedContent = await processEditorContent(formValues.content);
+
+      const entity = {
+        id: isNew ? undefined : Number(formValues.id),
+        title: formValues.title,
+        content: processedContent,
+        author: users.find(it => it.id.toString() === formValues.author?.toString()),
+      };
+
+      console.log('[StaticPage] Entity to be saved:', entity);
+
+      if (isNew) {
+        dispatch(createEntity(entity));
+      } else {
+        dispatch(updateEntity(entity));
+      }
+    } catch (error) {
+      console.error('Error processing content:', error);
+    }
+  };
 
   return (
     <div>
@@ -84,76 +121,58 @@ export const StaticPageUpdate = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
+            <Form onSubmit={handleSubmit}>
               {!isNew ? (
-                <ValidatedField
-                  name="id"
-                  required
-                  readOnly
-                  id="static-page-id"
-                  label={translate('global.field.id')}
-                  validate={{ required: true }}
-                />
+                <FormGroup>
+                  <Label for="static-page-id">{translate('global.field.id')}</Label>
+                  <ValidatedField name="id" id="static-page-id" type="text" value={formValues.id} readOnly required />
+                </FormGroup>
               ) : null}
-              <ValidatedField
-                label={translate('alpscraftCmsApp.staticPage.title')}
-                id="static-page-title"
-                name="title"
-                data-cy="title"
-                type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
-              />
-              <Row className="mb-3">
-                <Col md="3">
-                  <label htmlFor="static-page-content">
-                    <Translate contentKey="alpscraftCmsApp.staticPage.content">Content</Translate>
-                  </label>
-                </Col>
-                <Col md="9">
-                  <ValidatedField
-                    id="static-page-content"
-                    name="content"
-                    data-cy="content"
-                    type="hidden"
-                    validate={{
-                      required: { value: true, message: translate('entity.validation.required') },
-                    }}
-                  />
+              <FormGroup>
+                <Label for="static-page-title">{translate('alpscraftCmsApp.staticPage.title')}</Label>
+                <ValidatedField
+                  id="static-page-title"
+                  name="title"
+                  data-cy="title"
+                  type="text"
+                  value={formValues.title}
+                  onChange={handleInputChange}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="static-page-content">
+                  <Translate contentKey="alpscraftCmsApp.staticPage.content">Content</Translate>
+                </Label>
+                <div>
                   <RichTextEditor
-                    value={staticPageEntity.content || ''}
-                    onChange={value => {
-                      // This is a workaround since we can't directly use CustomInput
-                      const event = new Event('change', { bubbles: true });
-                      const element = document.getElementById('static-page-content');
-                      if (element) {
-                        const input = element as HTMLInputElement;
-                        input.value = value;
-                        input.dispatchEvent(event);
-                      }
-                    }}
+                    value={formValues.content}
+                    onChange={handleContentChange}
                     placeholder={translate('alpscraftCmsApp.staticPage.content.placeholder') || 'Write your content here...'}
                   />
-                </Col>
-              </Row>
-              <ValidatedField
-                id="static-page-author"
-                name="author"
-                data-cy="author"
-                label={translate('alpscraftCmsApp.staticPage.author')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {users
-                  ? users.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.login}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/static-page" replace color="info">
+                </div>
+              </FormGroup>
+              <FormGroup>
+                <Label for="static-page-author">{translate('alpscraftCmsApp.staticPage.author')}</Label>
+                <ValidatedField
+                  id="static-page-author"
+                  name="author"
+                  data-cy="author"
+                  type="select"
+                  value={formValues.author}
+                  onChange={handleInputChange}
+                >
+                  <option value="" key="0" />
+                  {users
+                    ? users.map(otherEntity => (
+                        <option value={otherEntity.id} key={otherEntity.id}>
+                          {otherEntity.login}
+                        </option>
+                      ))
+                    : null}
+                </ValidatedField>
+              </FormGroup>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/entities/static-page" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -166,7 +185,7 @@ export const StaticPageUpdate = () => {
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </ValidatedForm>
+            </Form>
           )}
         </Col>
       </Row>
