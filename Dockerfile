@@ -3,8 +3,6 @@ FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
 RUN chmod +x mvnw
-ENV JAVA_HOME=/opt/java/openjdk
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
 RUN ./mvnw -ntp verify -DskipTests -Pprod package
 
 FROM eclipse-temurin:17-jre-focal
