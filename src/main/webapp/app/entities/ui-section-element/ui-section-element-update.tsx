@@ -121,6 +121,17 @@ export const UiSectionElementUpdate = () => {
                 }}
               />
               <ValidatedField
+                label={translate('alpscraftCmsApp.uiSectionElement.elementOrder')}
+                id="ui-section-element-elementOrder"
+                name="elementOrder"
+                data-cy="elementOrder"
+                type="number"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  min: { value: 0, message: translate('entity.validation.min', { min: 0 }) },
+                }}
+              />
+              <ValidatedField
                 id="ui-section-element-uiSection"
                 name="uiSection"
                 data-cy="uiSection"

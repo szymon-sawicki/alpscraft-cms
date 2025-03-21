@@ -15,6 +15,9 @@ const adminMenuItems = () => (
     <MenuItem icon="file-alt" to="/entities/static-page">
       <Translate contentKey="global.menu.admin.pageManagement">Static Pages</Translate>
     </MenuItem>
+    <MenuItem icon="list" to="/admin/top-menu">
+      <Translate contentKey="global.menu.admin.topMenu">Top Menu</Translate>
+    </MenuItem>
     <MenuItem icon="tachometer-alt" to="/admin/metrics">
       <Translate contentKey="global.menu.admin.metrics">Metrics</Translate>
     </MenuItem>

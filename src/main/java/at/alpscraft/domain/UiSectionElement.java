@@ -33,6 +33,10 @@ public class UiSectionElement implements Serializable {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @NotNull
+    @Column(name = "element_order", nullable = false)
+    private Integer elementOrder;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private UiSection uiSection;
 
@@ -77,6 +81,19 @@ public class UiSectionElement implements Serializable {
         this.content = content;
     }
 
+    public Integer getElementOrder() {
+        return this.elementOrder;
+    }
+
+    public UiSectionElement elementOrder(Integer elementOrder) {
+        this.setElementOrder(elementOrder);
+        return this;
+    }
+
+    public void setElementOrder(Integer elementOrder) {
+        this.elementOrder = elementOrder;
+    }
+
     public UiSection getUiSection() {
         return this.uiSection;
     }
@@ -116,6 +133,7 @@ public class UiSectionElement implements Serializable {
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
             ", content='" + getContent() + "'" +
+            ", elementOrder=" + getElementOrder() +
             "}";
     }
 }

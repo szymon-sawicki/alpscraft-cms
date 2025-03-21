@@ -18,6 +18,9 @@ public class UiSectionElementDTO implements Serializable {
     @NotNull
     private String content;
 
+    @NotNull
+    private Integer elementOrder;
+
     private Long uiSectionId;
     private SectionType uiSectionTitle;
 
@@ -43,6 +46,14 @@ public class UiSectionElementDTO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getElementOrder() {
+        return elementOrder;
+    }
+
+    public void setElementOrder(Integer elementOrder) {
+        this.elementOrder = elementOrder;
     }
 
     public Long getUiSectionId() {
@@ -94,6 +105,8 @@ public class UiSectionElementDTO implements Serializable {
             ", content='" +
             getContent() +
             "'" +
+            ", elementOrder=" +
+            getElementOrder() +
             ", uiSectionId=" +
             getUiSectionId() +
             ", uiSectionTitle='" +

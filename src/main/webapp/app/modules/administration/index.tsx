@@ -10,6 +10,7 @@ import Configuration from './configuration/configuration';
 import Docs from './docs/docs';
 import BlogPost from 'app/entities/blog-post';
 import StaticPage from 'app/entities/static-page';
+import TopMenuAdmin from './top-menu/top-menu';
 
 const AdministrationRoutes = () => (
   <div>
@@ -17,6 +18,7 @@ const AdministrationRoutes = () => (
       <Route path="user-management/*" element={<UserManagement />} />
       <Route path="blog-posts/*" element={<BlogPost />} />
       <Route path="static-pages/*" element={<StaticPage />} />
+      <Route path="top-menu" element={<TopMenuAdmin />} />
       <Route path="health" element={<Health />} />
       <Route path="metrics" element={<Metrics />} />
       <Route path="configuration" element={<Configuration />} />

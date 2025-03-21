@@ -29,6 +29,7 @@
         "userManagement": "Benutzerverwaltung",
         "blogManagement": "Blog-Beiträge",
         "pageManagement": "Statische Seiten",
+        "topMenu": "Top-Menü",
         "tracker": "Benutzer Aktivitäten",
         "metrics": "Metriken",
         "health": "Status",

@@ -5,6 +5,7 @@ export interface IUiSectionElement {
   id?: number;
   title?: keyof typeof SectionType;
   content?: string;
+  elementOrder?: number;
   uiSection?: IUiSection | null;
 }
 

@@ -101,10 +101,6 @@ module.exports = async options =>
           reload: false,
         },
       ),
-      new WebpackNotifierPlugin({
-        title: 'Alpscraft Cms',
-        contentImage: path.join(__dirname, 'logo-jhipster.png'),
-      }),
       new CircularDependencyWorkaroundPlugin(),
     ].filter(Boolean),
   });

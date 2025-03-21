@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!-- Add order column to ui_section_element table -->
+    <changeSet id="20240610000000-1" author="alpscraft">
+        <addColumn tableName="ui_section_element">
+            <column name="element_order" type="integer" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Insert new UiSection record for Top Menu -->
+    <changeSet id="20240610000000-2" author="alpscraft">
+        <createSequence sequenceName="ui_section_seq" startValue="1000" incrementBy="50"/>
+        <insert tableName="ui_section">
+            <column name="id" valueComputed="nextval('ui_section_seq')"/>
+            <column name="title" value="MENU_TOP"/>
+            <column name="css_class" value="menu-top"/>
+            <column name="content" value="Menu Top"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog> 
