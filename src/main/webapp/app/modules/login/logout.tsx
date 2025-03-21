@@ -14,7 +14,7 @@ export const Logout = () => {
     } else if (!authentication.isAuthenticated) {
       window.location.href = '/';
     }
-  });
+  }, []);
 
   return (
     <div className="p-5">

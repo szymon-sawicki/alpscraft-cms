@@ -113,7 +113,7 @@ export const BlogPostUpdate = () => {
               <Row className="mb-3">
                 <Col md="3">
                   <label htmlFor="blog-post-content">
-                    <Translate contentKey="alpscraftCmsApp.blogPost.content">Content</Translate>
+                    <Translate contentKey="alpscraftCmsApp.blogPost.content.label">Content</Translate>
                   </label>
                 </Col>
                 <Col md="9">
@@ -138,7 +138,7 @@ export const BlogPostUpdate = () => {
                         input.dispatchEvent(event);
                       }
                     }}
-                    placeholder={translate('alpscraftCmsApp.blogPost.content.placeholder') || 'Write your content here...'}
+                    placeholder={translate('alpscraftCmsApp.blogPost.content.placeholder')}
                   />
                 </Col>
               </Row>

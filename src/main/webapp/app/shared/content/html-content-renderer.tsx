@@ -9,7 +9,7 @@ interface HTMLContentRendererProps {
 /**
  * Component that safely renders HTML content
  */
-export const HTMLContentRenderer = ({ content, className }: HTMLContentRendererProps) => {
+const HTMLContentRenderer = ({ content, className }: HTMLContentRendererProps) => {
   if (!content) {
     return null;
   }

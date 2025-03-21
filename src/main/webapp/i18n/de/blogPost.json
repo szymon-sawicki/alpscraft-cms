@@ -19,7 +19,10 @@
       },
       "id": "ID",
       "title": "Title",
-      "content": "Content",
+      "content": {
+        "label": "Content",
+        "placeholder": "Schreiben Sie hier Ihren Inhalt..."
+      },
       "category": "Category",
       "author": "Author"
     }

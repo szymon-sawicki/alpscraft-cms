@@ -16,7 +16,7 @@ import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
 import PageNotFound from 'app/shared/error/page-not-found';
 import { AUTHORITIES } from 'app/config/constants';
 import CmsPortal from 'app/modules/cms-portal/cms-portal';
-import BlogPostPublic from 'app/entities/blog-post/blog-post-public';
+import BlogPostPublic from 'app/entities/blog-post/blog-post-public-fix';
 
 const loading = <div>loading ...</div>;
 
@@ -29,6 +29,7 @@ const Admin = Loadable({
   loader: () => import(/* webpackChunkName: "administration" */ 'app/modules/administration'),
   loading: () => loading,
 });
+
 const AppRoutes = () => {
   return (
     <div className="view-routes">
@@ -62,7 +63,14 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
-        <Route path="entities/*" element={<EntitiesRoutes />} />
+        <Route
+          path="entities/*"
+          element={
+            <PrivateRoute hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER]}>
+              <EntitiesRoutes />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<PageNotFound />} />
       </ErrorBoundaryRoutes>
     </div>

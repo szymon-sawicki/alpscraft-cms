@@ -63,6 +63,13 @@ module.exports = async options => {
         alias: utils.mapTypescriptAliasToWebpackAlias(),
         fallback: {
           path: require.resolve('path-browserify'),
+          fs: false,
+          os: false,
+          util: false,
+          stream: false,
+          crypto: false,
+          buffer: false,
+          assert: false,
         },
       },
       module: {

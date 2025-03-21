@@ -4,6 +4,7 @@ const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const path = require('path');
 const sass = require('sass');
+const CircularDependencyWorkaroundPlugin = require('./circular-dependencies-fix');
 
 const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
@@ -22,6 +23,10 @@ module.exports = async options =>
     },
     optimization: {
       moduleIds: 'named',
+      chunkIds: 'named',
+      removeAvailableModules: false,
+      removeEmptyChunks: false,
+      splitChunks: false,
     },
     module: {
       rules: [
@@ -100,5 +105,6 @@ module.exports = async options =>
         title: 'Alpscraft Cms',
         contentImage: path.join(__dirname, 'logo-jhipster.png'),
       }),
+      new CircularDependencyWorkaroundPlugin(),
     ].filter(Boolean),
   });
