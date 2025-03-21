@@ -10,6 +10,7 @@ import { getUsers } from 'app/modules/administration/user-management/user-manage
 import { getEntities as getPostCategories } from 'app/entities/post-category/post-category.reducer';
 import { createEntity, getEntity, reset, updateEntity } from './blog-post.reducer';
 import RichTextEditor from 'app/shared/editor/rich-text-editor';
+import { processEditorContent } from 'app/shared/util/editor-image-processor';
 
 export const BlogPostUpdate = () => {
   const dispatch = useAppDispatch();
@@ -77,40 +78,47 @@ export const BlogPostUpdate = () => {
     console.log('[BlogPost] Content changed to:', value);
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     console.log('[BlogPost] Submitting form with values:', formValues);
 
-    const entity = {
-      id: isNew ? undefined : Number(formValues.id),
-      title: formValues.title,
-      content: formValues.content,
-      category: formValues.categoryId ? { id: Number(formValues.categoryId) } : null,
-      author: formValues.authorId ? { id: Number(formValues.authorId) } : null,
-    };
+    try {
+      // Process any base64 images in the content and replace with URLs
+      const processedContent = await processEditorContent(formValues.content);
 
-    console.log('[BlogPost] Entity to be saved:', entity);
+      const entity = {
+        id: isNew ? undefined : Number(formValues.id),
+        title: formValues.title,
+        content: processedContent,
+        category: formValues.categoryId ? { id: Number(formValues.categoryId) } : null,
+        author: formValues.authorId ? { id: Number(formValues.authorId) } : null,
+      };
 
-    if (isNew) {
-      dispatch(createEntity(entity))
-        .unwrap()
-        .then(() => {
-          console.log('[BlogPost] Navigation after successful save to:', '/entities/blog-post');
-          navigate('/entities/blog-post');
-        })
-        .catch(err => {
-          console.error('[BlogPost] Error creating entity:', err);
-        });
-    } else {
-      dispatch(updateEntity(entity))
-        .unwrap()
-        .then(() => {
-          console.log('[BlogPost] Navigation after successful save to:', '/entities/blog-post');
-          navigate('/entities/blog-post');
-        })
-        .catch(err => {
-          console.error('[BlogPost] Error updating entity:', err);
-        });
+      console.log('[BlogPost] Entity to be saved:', entity);
+
+      if (isNew) {
+        dispatch(createEntity(entity))
+          .unwrap()
+          .then(() => {
+            console.log('[BlogPost] Navigation after successful save to:', '/entities/blog-post');
+            navigate('/entities/blog-post');
+          })
+          .catch(err => {
+            console.error('[BlogPost] Error creating entity:', err);
+          });
+      } else {
+        dispatch(updateEntity(entity))
+          .unwrap()
+          .then(() => {
+            console.log('[BlogPost] Navigation after successful save to:', '/entities/blog-post');
+            navigate('/entities/blog-post');
+          })
+          .catch(err => {
+            console.error('[BlogPost] Error updating entity:', err);
+          });
+      }
+    } catch (error) {
+      console.error('Error processing content:', error);
     }
   };
 
@@ -149,7 +157,7 @@ export const BlogPostUpdate = () => {
               </FormGroup>
               <FormGroup>
                 <Label for="blog-post-content">
-                  <Translate contentKey="alpscraftCmsApp.blogPost.content">Content</Translate>
+                  <Translate contentKey="alpscraftCmsApp.blogPost.content.label">Content</Translate>
                 </Label>
                 <div>
                   <RichTextEditor
