@@ -1,0 +1,6 @@
+INSERT INTO blog_post (id, title, content, category_id, author_id) VALUES
+(1, 'Getting Started with JHipster', '<p>JHipster is a development platform to quickly generate, develop, and deploy modern web applications and microservice architectures.</p><p>This is a comprehensive guide to getting started with JHipster for your next project.</p>', 1, 1),
+(2, 'Exploring the Austrian Alps', '<p>The Austrian Alps offer some of the most breathtaking landscapes in Europe.</p><p>Here are the must-visit destinations for your next mountain adventure.</p>', 2, 1),
+(3, 'Microservices Architecture Patterns', '<p>Microservices architecture has become increasingly popular for building complex applications.</p><p>Let\'s explore some common patterns and best practices.</p>', 1, 1),
+(4, 'Wellness Tips for Developers', '<p>Spending long hours coding can take a toll on your health.</p><p>These wellness tips will help you stay healthy while maintaining productivity.</p>', 3, 1),
+(5, 'Hidden Gems in Salzburg', '<p>Beyond the famous Mozart attractions, Salzburg has many hidden treasures.</p><p>Discover the lesser-known spots that locals love.</p>', 2, 1); 

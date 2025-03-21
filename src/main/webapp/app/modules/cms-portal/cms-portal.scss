@@ -1,0 +1,29 @@
+.cms-portal {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  header,
+  footer {
+    width: 100%;
+  }
+
+  main {
+    flex: 1;
+    padding: 2rem 0;
+  }
+
+  .loading-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+  }
+
+  .card {
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+}
