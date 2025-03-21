@@ -1,53 +1,59 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
+import { Button, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity } from './blog-post.reducer';
-import parse from 'html-react-parser';
+import HTMLContentRenderer from 'app/shared/content/html-content-renderer';
 
 export const BlogPostPublic = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<'id'>();
 
   useEffect(() => {
-    if (id) {
-      dispatch(getEntity(id));
-    }
+    dispatch(getEntity(id));
   }, []);
 
   const blogPostEntity = useAppSelector(state => state.blogPost.entity);
 
   return (
-    <div className="container py-5">
-      <Row>
-        <Col md={8} className="mx-auto">
-          {blogPostEntity?.id ? (
-            <div className="blog-post">
-              <h1 className="display-4 mb-3">{blogPostEntity.title}</h1>
-
-              <div className="text-muted mb-4">
-                <span className="badge bg-primary me-2">{blogPostEntity.category?.name}</span>
-                <span>by {blogPostEntity.author?.login || 'Unknown'}</span>
+    <Row className="justify-content-center">
+      <Col md="10">
+        <Card className="mt-4 mb-4">
+          <CardHeader>
+            <h1 className="mb-0">{blogPostEntity.title}</h1>
+            {blogPostEntity.category && (
+              <div className="text-muted mt-2">
+                <small>
+                  <Translate contentKey="alpscraftCmsApp.blogPost.category">Category</Translate>: {blogPostEntity.category.name}
+                </small>
               </div>
-
-              <div className="blog-content">{parse(blogPostEntity.content || '')}</div>
-
-              <div className="mt-5">
-                <Link to="/" className="btn btn-info">
-                  <FontAwesomeIcon icon="arrow-left" />
-                  <span className="d-none d-md-inline ms-1">Back to Portal</span>
-                </Link>
+            )}
+            {blogPostEntity.author && (
+              <div className="text-muted">
+                <small>
+                  <Translate contentKey="alpscraftCmsApp.blogPost.author">Author</Translate>: {blogPostEntity.author.login}
+                </small>
               </div>
+            )}
+          </CardHeader>
+          <CardBody>
+            <HTMLContentRenderer content={blogPostEntity.content} className="blog-content" />
+
+            <div className="mt-4">
+              <Button tag={Link} to="/" color="primary">
+                <FontAwesomeIcon icon="arrow-left" />{' '}
+                <span className="d-none d-md-inline">
+                  <Translate contentKey="entity.action.back">Back</Translate>
+                </span>
+              </Button>
             </div>
-          ) : (
-            <div className="alert alert-warning">Blog post not found</div>
-          )}
-        </Col>
-      </Row>
-    </div>
+          </CardBody>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 

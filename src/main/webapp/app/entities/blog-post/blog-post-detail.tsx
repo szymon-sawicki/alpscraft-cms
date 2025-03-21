@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Button, Col, Row } from 'reactstrap';
+import { Button, Row, Col } from 'reactstrap';
 import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './blog-post.reducer';
+import HTMLContentRenderer from 'app/shared/content/html-content-renderer';
 
 export const BlogPostDetail = () => {
   const dispatch = useAppDispatch();
@@ -42,15 +43,17 @@ export const BlogPostDetail = () => {
               <Translate contentKey="alpscraftCmsApp.blogPost.content">Content</Translate>
             </span>
           </dt>
-          <dd>{blogPostEntity.content}</dd>
+          <dd>
+            <HTMLContentRenderer content={blogPostEntity.content} />
+          </dd>
           <dt>
             <Translate contentKey="alpscraftCmsApp.blogPost.category">Category</Translate>
           </dt>
-          <dd>{blogPostEntity.category ? blogPostEntity.category.id : ''}</dd>
+          <dd>{blogPostEntity.category ? blogPostEntity.category.name : ''}</dd>
           <dt>
             <Translate contentKey="alpscraftCmsApp.blogPost.author">Author</Translate>
           </dt>
-          <dd>{blogPostEntity.author ? blogPostEntity.author.id : ''}</dd>
+          <dd>{blogPostEntity.author ? blogPostEntity.author.login : ''}</dd>
         </dl>
         <Button tag={Link} to="/blog-post" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

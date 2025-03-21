@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities as getPostCategories } from 'app/entities/post-category/post-category.reducer';
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
 import { createEntity, getEntity, reset, updateEntity } from './blog-post.reducer';
+import RichTextEditor from 'app/shared/editor/rich-text-editor';
 
 export const BlogPostUpdate = () => {
   const dispatch = useAppDispatch();
@@ -109,16 +110,38 @@ export const BlogPostUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
-              <ValidatedField
-                label={translate('alpscraftCmsApp.blogPost.content')}
-                id="blog-post-content"
-                name="content"
-                data-cy="content"
-                type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
-              />
+              <Row className="mb-3">
+                <Col md="3">
+                  <label htmlFor="blog-post-content">
+                    <Translate contentKey="alpscraftCmsApp.blogPost.content">Content</Translate>
+                  </label>
+                </Col>
+                <Col md="9">
+                  <ValidatedField
+                    id="blog-post-content"
+                    name="content"
+                    data-cy="content"
+                    type="hidden"
+                    validate={{
+                      required: { value: true, message: translate('entity.validation.required') },
+                    }}
+                  />
+                  <RichTextEditor
+                    value={blogPostEntity.content || ''}
+                    onChange={value => {
+                      // This is a workaround since we can't directly use CustomInput
+                      const event = new Event('change', { bubbles: true });
+                      const element = document.getElementById('blog-post-content');
+                      if (element) {
+                        const input = element as HTMLInputElement;
+                        input.value = value;
+                        input.dispatchEvent(event);
+                      }
+                    }}
+                    placeholder={translate('alpscraftCmsApp.blogPost.content.placeholder') || 'Write your content here...'}
+                  />
+                </Col>
+              </Row>
               <ValidatedField
                 id="blog-post-category"
                 name="category"
@@ -130,7 +153,7 @@ export const BlogPostUpdate = () => {
                 {postCategories
                   ? postCategories.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.name}
                       </option>
                     ))
                   : null}
@@ -146,7 +169,7 @@ export const BlogPostUpdate = () => {
                 {users
                   ? users.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.login}
                       </option>
                     ))
                   : null}

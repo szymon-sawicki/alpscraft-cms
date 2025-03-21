@@ -27,6 +27,8 @@
       "admin": {
         "main": "Administration",
         "userManagement": "Benutzerverwaltung",
+        "blogManagement": "Blog-Beiträge",
+        "pageManagement": "Statische Seiten",
         "tracker": "Benutzer Aktivitäten",
         "metrics": "Metriken",
         "health": "Status",
@@ -149,5 +151,11 @@
       "not.image": "Es wird erwartet, dass die Datei ein Bild ist. Die Datei ist jedoch vom Typ \"{{ fileType }}\""
     }
   },
-  "footer": "Dies ist Ihre Fußzeile"
+  "footer": "Dies ist Ihre Fußzeile",
+  "editor": {
+    "insertImage": "Bild einfügen",
+    "dragOrClick": "Bild hier ablegen oder klicken, um ein Bild auszuwählen",
+    "preview": "Vorschau",
+    "altText": "Alternativer Text"
+  }
 }

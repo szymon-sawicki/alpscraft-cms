@@ -44,7 +44,7 @@ management:
           - liquibase
   endpoint:
     health:
-      show-details: when_authorized
+      show-details: when-authorized
       roles: 'ROLE_ADMIN'
       probes:
         enabled: true
@@ -224,3 +224,36 @@ jhipster:
 # ===================================================================
 
 # application:
+
+# Application-specific configuration
+alpscraft:
+  # Upload directory configuration
+  uploads:
+    dir: ./uploads
+    url-prefix: /content/uploads
+  clientApp:
+    name: 'alpscraftCmsApp'
+  # By default CORS is disabled. Uncomment to enable.
+  # cors:
+  #   allowed-origins: "http://localhost:8100,http://localhost:9000"
+  #   allowed-methods: "*"
+  #   allowed-headers: "*"
+  #   exposed-headers: "Authorization,Link,X-Total-Count,X-${alpscraft.clientApp.name}-alert,X-${alpscraft.clientApp.name}-error,X-${alpscraft.clientApp.name}-params"
+  #   allow-credentials: true
+  #   max-age: 1800
+  mail:
+    from: AlpscraftCms@localhost
+  api-docs:
+    default-include-pattern: ${server.api.path:}/api/**
+    management-include-pattern: ${server.api.path:}/management/**
+    title: Alpscraft Cms API
+    description: Alpscraft Cms API documentation
+    version: 0.0.1
+    terms-of-service-url:
+    contact-name:
+    contact-url:
+    contact-email:
+    license: unlicensed
+    license-url:
+  security:
+    content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:"

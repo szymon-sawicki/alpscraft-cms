@@ -38,7 +38,7 @@ const LoginModal = (props: ILoginModalProps) => {
           <Row>
             <Col md="12">
               {loginError ? (
-                <Alert color="danger" data-cy="loginError">
+                <Alert color="danger" data-cy="loginError" timeout={300}>
                   <Translate contentKey="login.messages.error.authentication">
                     <strong>Failed to sign in!</strong> Please check your credentials and try again.
                   </Translate>
@@ -81,17 +81,17 @@ const LoginModal = (props: ILoginModalProps) => {
             </Col>
           </Row>
           <div className="mt-1">&nbsp;</div>
-          <Alert color="warning">
-            <Link to="/account/reset/request" data-cy="forgetYourPasswordSelector">
-              <Translate contentKey="login.password.forgot">Did you forget your password?</Translate>
+          <Alert color="warning" timeout={300}>
+            <Translate contentKey="global.messages.info.register.noaccount">You don&apos;t have an account yet?</Translate>&nbsp;
+            <Link to="/account/register" data-cy="registerLink">
+              <Translate contentKey="global.messages.info.register.link">Register a new account</Translate>
             </Link>
           </Alert>
-          <Alert color="warning">
-            <span>
-              <Translate contentKey="global.messages.info.register.noaccount">You don&apos;t have an account yet?</Translate>
-            </span>{' '}
-            <Link to="/account/register">
-              <Translate contentKey="global.messages.info.register.link">Register a new account</Translate>
+          <Alert color="warning" timeout={300}>
+            <Translate contentKey="global.messages.info.forgot">Did you forget your password?</Translate>
+            &nbsp;
+            <Link to="/account/reset/request" data-cy="forgetYourPasswordSelector">
+              <Translate contentKey="login.password.forgot">Password Reset</Translate>
             </Link>
           </Alert>
         </ModalBody>

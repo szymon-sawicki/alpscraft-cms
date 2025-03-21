@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Button, Col, Row } from 'reactstrap';
+import { Button, Row, Col } from 'reactstrap';
 import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './static-page.reducer';
+import HTMLContentRenderer from 'app/shared/content/html-content-renderer';
 
 export const StaticPageDetail = () => {
   const dispatch = useAppDispatch();
@@ -42,11 +43,13 @@ export const StaticPageDetail = () => {
               <Translate contentKey="alpscraftCmsApp.staticPage.content">Content</Translate>
             </span>
           </dt>
-          <dd>{staticPageEntity.content}</dd>
+          <dd>
+            <HTMLContentRenderer content={staticPageEntity.content} />
+          </dd>
           <dt>
             <Translate contentKey="alpscraftCmsApp.staticPage.author">Author</Translate>
           </dt>
-          <dd>{staticPageEntity.author ? staticPageEntity.author.id : ''}</dd>
+          <dd>{staticPageEntity.author ? staticPageEntity.author.login : ''}</dd>
         </dl>
         <Button tag={Link} to="/static-page" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

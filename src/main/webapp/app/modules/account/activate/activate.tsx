@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { activateAction, reset } from './activate.reducer';
 
 const successAlert = (
-  <Alert color="success">
+  <Alert color="success" timeout={300}>
     <Translate contentKey="activate.messages.success">
       <strong>Your user account has been activated.</strong> Please
     </Translate>
@@ -19,7 +19,7 @@ const successAlert = (
 );
 
 const failureAlert = (
-  <Alert color="danger">
+  <Alert color="danger" timeout={300}>
     <Translate contentKey="activate.messages.error">
       <strong>Your user could not be activated.</strong> Please use the registration form to sign up.
     </Translate>

@@ -10,10 +10,10 @@ const EntitiesMenu = () => {
       <MenuItem icon="asterisk" to="/post-category">
         <Translate contentKey="global.menu.entities.postCategory" />
       </MenuItem>
-      <MenuItem icon="asterisk" to="/blog-post">
+      <MenuItem icon="newspaper" to="/blog-post">
         <Translate contentKey="global.menu.entities.blogPost" />
       </MenuItem>
-      <MenuItem icon="asterisk" to="/static-page">
+      <MenuItem icon="file-alt" to="/static-page">
         <Translate contentKey="global.menu.entities.staticPage" />
       </MenuItem>
       <MenuItem icon="asterisk" to="/ui-section">

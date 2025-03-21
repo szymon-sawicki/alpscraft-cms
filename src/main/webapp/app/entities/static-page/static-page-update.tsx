@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
 import { createEntity, getEntity, reset, updateEntity } from './static-page.reducer';
+import RichTextEditor from 'app/shared/editor/rich-text-editor';
 
 export const StaticPageUpdate = () => {
   const dispatch = useAppDispatch();
@@ -104,16 +105,38 @@ export const StaticPageUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
-              <ValidatedField
-                label={translate('alpscraftCmsApp.staticPage.content')}
-                id="static-page-content"
-                name="content"
-                data-cy="content"
-                type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
-              />
+              <Row className="mb-3">
+                <Col md="3">
+                  <label htmlFor="static-page-content">
+                    <Translate contentKey="alpscraftCmsApp.staticPage.content">Content</Translate>
+                  </label>
+                </Col>
+                <Col md="9">
+                  <ValidatedField
+                    id="static-page-content"
+                    name="content"
+                    data-cy="content"
+                    type="hidden"
+                    validate={{
+                      required: { value: true, message: translate('entity.validation.required') },
+                    }}
+                  />
+                  <RichTextEditor
+                    value={staticPageEntity.content || ''}
+                    onChange={value => {
+                      // This is a workaround since we can't directly use CustomInput
+                      const event = new Event('change', { bubbles: true });
+                      const element = document.getElementById('static-page-content');
+                      if (element) {
+                        const input = element as HTMLInputElement;
+                        input.value = value;
+                        input.dispatchEvent(event);
+                      }
+                    }}
+                    placeholder={translate('alpscraftCmsApp.staticPage.content.placeholder') || 'Write your content here...'}
+                  />
+                </Col>
+              </Row>
               <ValidatedField
                 id="static-page-author"
                 name="author"
@@ -125,7 +148,7 @@ export const StaticPageUpdate = () => {
                 {users
                   ? users.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.login}
                       </option>
                     ))
                   : null}
