@@ -1,6 +1,6 @@
 services:
   alpscraft_cms:
-    build: .
+    image: alpscraft_cms
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs
