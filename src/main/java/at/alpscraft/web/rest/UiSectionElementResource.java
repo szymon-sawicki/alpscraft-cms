@@ -1,7 +1,7 @@
 package at.alpscraft.web.rest;
 
-import at.alpscraft.domain.UiSectionElement;
-import at.alpscraft.repository.UiSectionElementRepository;
+import at.alpscraft.service.UiSectionElementService;
+import at.alpscraft.service.dto.UiSectionElementDTO;
 import at.alpscraft.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -24,7 +23,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/ui-section-elements")
-@Transactional
 public class UiSectionElementResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(UiSectionElementResource.class);
@@ -34,70 +32,70 @@ public class UiSectionElementResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final UiSectionElementRepository uiSectionElementRepository;
+    private final UiSectionElementService uiSectionElementService;
 
-    public UiSectionElementResource(UiSectionElementRepository uiSectionElementRepository) {
-        this.uiSectionElementRepository = uiSectionElementRepository;
+    public UiSectionElementResource(UiSectionElementService uiSectionElementService) {
+        this.uiSectionElementService = uiSectionElementService;
     }
 
     /**
      * {@code POST  /ui-section-elements} : Create a new uiSectionElement.
      *
-     * @param uiSectionElement the uiSectionElement to create.
+     * @param uiSectionElementDTO the uiSectionElement to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new uiSectionElement, or with status {@code 400 (Bad Request)} if the uiSectionElement has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<UiSectionElement> createUiSectionElement(@Valid @RequestBody UiSectionElement uiSectionElement)
+    public ResponseEntity<UiSectionElementDTO> createUiSectionElement(@Valid @RequestBody UiSectionElementDTO uiSectionElementDTO)
         throws URISyntaxException {
-        LOG.debug("REST request to save UiSectionElement : {}", uiSectionElement);
-        if (uiSectionElement.getId() != null) {
+        LOG.debug("REST request to save UiSectionElement : {}", uiSectionElementDTO);
+        if (uiSectionElementDTO.getId() != null) {
             throw new BadRequestAlertException("A new uiSectionElement cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        uiSectionElement = uiSectionElementRepository.save(uiSectionElement);
-        return ResponseEntity.created(new URI("/api/ui-section-elements/" + uiSectionElement.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, uiSectionElement.getId().toString()))
-            .body(uiSectionElement);
+        UiSectionElementDTO result = uiSectionElementService.save(uiSectionElementDTO);
+        return ResponseEntity.created(new URI("/api/ui-section-elements/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     /**
      * {@code PUT  /ui-section-elements/:id} : Updates an existing uiSectionElement.
      *
      * @param id the id of the uiSectionElement to save.
-     * @param uiSectionElement the uiSectionElement to update.
+     * @param uiSectionElementDTO the uiSectionElement to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated uiSectionElement,
      * or with status {@code 400 (Bad Request)} if the uiSectionElement is not valid,
      * or with status {@code 500 (Internal Server Error)} if the uiSectionElement couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<UiSectionElement> updateUiSectionElement(
+    public ResponseEntity<UiSectionElementDTO> updateUiSectionElement(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody UiSectionElement uiSectionElement
+        @Valid @RequestBody UiSectionElementDTO uiSectionElementDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to update UiSectionElement : {}, {}", id, uiSectionElement);
-        if (uiSectionElement.getId() == null) {
+        LOG.debug("REST request to update UiSectionElement : {}, {}", id, uiSectionElementDTO);
+        if (uiSectionElementDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, uiSectionElement.getId())) {
+        if (!Objects.equals(id, uiSectionElementDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!uiSectionElementRepository.existsById(id)) {
+        if (!uiSectionElementService.findOne(id).isPresent()) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        uiSectionElement = uiSectionElementRepository.save(uiSectionElement);
+        UiSectionElementDTO result = uiSectionElementService.update(uiSectionElementDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, uiSectionElement.getId().toString()))
-            .body(uiSectionElement);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, uiSectionElementDTO.getId().toString()))
+            .body(result);
     }
 
     /**
      * {@code PATCH  /ui-section-elements/:id} : Partial updates given fields of an existing uiSectionElement, field will ignore if it is null
      *
      * @param id the id of the uiSectionElement to save.
-     * @param uiSectionElement the uiSectionElement to update.
+     * @param uiSectionElementDTO the uiSectionElement to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated uiSectionElement,
      * or with status {@code 400 (Bad Request)} if the uiSectionElement is not valid,
      * or with status {@code 404 (Not Found)} if the uiSectionElement is not found,
@@ -105,39 +103,27 @@ public class UiSectionElementResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<UiSectionElement> partialUpdateUiSectionElement(
+    public ResponseEntity<UiSectionElementDTO> partialUpdateUiSectionElement(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody UiSectionElement uiSectionElement
+        @NotNull @RequestBody UiSectionElementDTO uiSectionElementDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update UiSectionElement partially : {}, {}", id, uiSectionElement);
-        if (uiSectionElement.getId() == null) {
+        LOG.debug("REST request to partial update UiSectionElement partially : {}, {}", id, uiSectionElementDTO);
+        if (uiSectionElementDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, uiSectionElement.getId())) {
+        if (!Objects.equals(id, uiSectionElementDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!uiSectionElementRepository.existsById(id)) {
+        if (!uiSectionElementService.findOne(id).isPresent()) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<UiSectionElement> result = uiSectionElementRepository
-            .findById(uiSectionElement.getId())
-            .map(existingUiSectionElement -> {
-                if (uiSectionElement.getTitle() != null) {
-                    existingUiSectionElement.setTitle(uiSectionElement.getTitle());
-                }
-                if (uiSectionElement.getContent() != null) {
-                    existingUiSectionElement.setContent(uiSectionElement.getContent());
-                }
-
-                return existingUiSectionElement;
-            })
-            .map(uiSectionElementRepository::save);
+        Optional<UiSectionElementDTO> result = uiSectionElementService.partialUpdate(uiSectionElementDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, uiSectionElement.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, uiSectionElementDTO.getId().toString())
         );
     }
 
@@ -147,9 +133,9 @@ public class UiSectionElementResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of uiSectionElements in body.
      */
     @GetMapping("")
-    public List<UiSectionElement> getAllUiSectionElements() {
+    public List<UiSectionElementDTO> getAllUiSectionElements() {
         LOG.debug("REST request to get all UiSectionElements");
-        return uiSectionElementRepository.findAll();
+        return uiSectionElementService.findAll();
     }
 
     /**
@@ -159,10 +145,10 @@ public class UiSectionElementResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the uiSectionElement, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<UiSectionElement> getUiSectionElement(@PathVariable("id") Long id) {
+    public ResponseEntity<UiSectionElementDTO> getUiSectionElement(@PathVariable("id") Long id) {
         LOG.debug("REST request to get UiSectionElement : {}", id);
-        Optional<UiSectionElement> uiSectionElement = uiSectionElementRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(uiSectionElement);
+        Optional<UiSectionElementDTO> uiSectionElementDTO = uiSectionElementService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(uiSectionElementDTO);
     }
 
     /**
@@ -174,7 +160,7 @@ public class UiSectionElementResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUiSectionElement(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete UiSectionElement : {}", id);
-        uiSectionElementRepository.deleteById(id);
+        uiSectionElementService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();

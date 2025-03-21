@@ -1,7 +1,7 @@
 package at.alpscraft.web.rest;
 
-import at.alpscraft.domain.UiSection;
-import at.alpscraft.repository.UiSectionRepository;
+import at.alpscraft.service.UiSectionService;
+import at.alpscraft.service.dto.UiSectionDTO;
 import at.alpscraft.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -24,7 +23,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/ui-sections")
-@Transactional
 public class UiSectionResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(UiSectionResource.class);
@@ -34,69 +32,69 @@ public class UiSectionResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final UiSectionRepository uiSectionRepository;
+    private final UiSectionService uiSectionService;
 
-    public UiSectionResource(UiSectionRepository uiSectionRepository) {
-        this.uiSectionRepository = uiSectionRepository;
+    public UiSectionResource(UiSectionService uiSectionService) {
+        this.uiSectionService = uiSectionService;
     }
 
     /**
      * {@code POST  /ui-sections} : Create a new uiSection.
      *
-     * @param uiSection the uiSection to create.
+     * @param uiSectionDTO the uiSection to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new uiSection, or with status {@code 400 (Bad Request)} if the uiSection has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<UiSection> createUiSection(@Valid @RequestBody UiSection uiSection) throws URISyntaxException {
-        LOG.debug("REST request to save UiSection : {}", uiSection);
-        if (uiSection.getId() != null) {
+    public ResponseEntity<UiSectionDTO> createUiSection(@Valid @RequestBody UiSectionDTO uiSectionDTO) throws URISyntaxException {
+        LOG.debug("REST request to save UiSection : {}", uiSectionDTO);
+        if (uiSectionDTO.getId() != null) {
             throw new BadRequestAlertException("A new uiSection cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        uiSection = uiSectionRepository.save(uiSection);
-        return ResponseEntity.created(new URI("/api/ui-sections/" + uiSection.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, uiSection.getId().toString()))
-            .body(uiSection);
+        UiSectionDTO result = uiSectionService.save(uiSectionDTO);
+        return ResponseEntity.created(new URI("/api/ui-sections/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     /**
      * {@code PUT  /ui-sections/:id} : Updates an existing uiSection.
      *
      * @param id the id of the uiSection to save.
-     * @param uiSection the uiSection to update.
+     * @param uiSectionDTO the uiSection to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated uiSection,
      * or with status {@code 400 (Bad Request)} if the uiSection is not valid,
      * or with status {@code 500 (Internal Server Error)} if the uiSection couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<UiSection> updateUiSection(
+    public ResponseEntity<UiSectionDTO> updateUiSection(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody UiSection uiSection
+        @Valid @RequestBody UiSectionDTO uiSectionDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to update UiSection : {}, {}", id, uiSection);
-        if (uiSection.getId() == null) {
+        LOG.debug("REST request to update UiSection : {}, {}", id, uiSectionDTO);
+        if (uiSectionDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, uiSection.getId())) {
+        if (!Objects.equals(id, uiSectionDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!uiSectionRepository.existsById(id)) {
+        if (!uiSectionService.findOne(id).isPresent()) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        uiSection = uiSectionRepository.save(uiSection);
+        UiSectionDTO result = uiSectionService.update(uiSectionDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, uiSection.getId().toString()))
-            .body(uiSection);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, uiSectionDTO.getId().toString()))
+            .body(result);
     }
 
     /**
      * {@code PATCH  /ui-sections/:id} : Partial updates given fields of an existing uiSection, field will ignore if it is null
      *
      * @param id the id of the uiSection to save.
-     * @param uiSection the uiSection to update.
+     * @param uiSectionDTO the uiSection to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated uiSection,
      * or with status {@code 400 (Bad Request)} if the uiSection is not valid,
      * or with status {@code 404 (Not Found)} if the uiSection is not found,
@@ -104,42 +102,27 @@ public class UiSectionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<UiSection> partialUpdateUiSection(
+    public ResponseEntity<UiSectionDTO> partialUpdateUiSection(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody UiSection uiSection
+        @NotNull @RequestBody UiSectionDTO uiSectionDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update UiSection partially : {}, {}", id, uiSection);
-        if (uiSection.getId() == null) {
+        LOG.debug("REST request to partial update UiSection partially : {}, {}", id, uiSectionDTO);
+        if (uiSectionDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, uiSection.getId())) {
+        if (!Objects.equals(id, uiSectionDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
-        if (!uiSectionRepository.existsById(id)) {
+        if (!uiSectionService.findOne(id).isPresent()) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<UiSection> result = uiSectionRepository
-            .findById(uiSection.getId())
-            .map(existingUiSection -> {
-                if (uiSection.getTitle() != null) {
-                    existingUiSection.setTitle(uiSection.getTitle());
-                }
-                if (uiSection.getCssClass() != null) {
-                    existingUiSection.setCssClass(uiSection.getCssClass());
-                }
-                if (uiSection.getContent() != null) {
-                    existingUiSection.setContent(uiSection.getContent());
-                }
-
-                return existingUiSection;
-            })
-            .map(uiSectionRepository::save);
+        Optional<UiSectionDTO> result = uiSectionService.partialUpdate(uiSectionDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, uiSection.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, uiSectionDTO.getId().toString())
         );
     }
 
@@ -149,9 +132,9 @@ public class UiSectionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of uiSections in body.
      */
     @GetMapping("")
-    public List<UiSection> getAllUiSections() {
+    public List<UiSectionDTO> getAllUiSections() {
         LOG.debug("REST request to get all UiSections");
-        return uiSectionRepository.findAll();
+        return uiSectionService.findAll();
     }
 
     /**
@@ -161,10 +144,10 @@ public class UiSectionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the uiSection, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<UiSection> getUiSection(@PathVariable("id") Long id) {
+    public ResponseEntity<UiSectionDTO> getUiSection(@PathVariable("id") Long id) {
         LOG.debug("REST request to get UiSection : {}", id);
-        Optional<UiSection> uiSection = uiSectionRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(uiSection);
+        Optional<UiSectionDTO> uiSectionDTO = uiSectionService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(uiSectionDTO);
     }
 
     /**
@@ -176,7 +159,7 @@ public class UiSectionResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUiSection(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete UiSection : {}", id);
-        uiSectionRepository.deleteById(id);
+        uiSectionService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
