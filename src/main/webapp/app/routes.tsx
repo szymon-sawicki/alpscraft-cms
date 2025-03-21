@@ -16,6 +16,7 @@ import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
 import PageNotFound from 'app/shared/error/page-not-found';
 import { AUTHORITIES } from 'app/config/constants';
 import CmsPortal from 'app/modules/cms-portal/cms-portal';
+import BlogPostPublic from 'app/entities/blog-post/blog-post-public';
 
 const loading = <div>loading ...</div>;
 
@@ -34,6 +35,7 @@ const AppRoutes = () => {
       <ErrorBoundaryRoutes>
         <Route index element={<CmsPortal />} />
         <Route path="home" element={<Home />} />
+        <Route path="blog/:id" element={<BlogPostPublic />} />
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<Logout />} />
         <Route path="account">
@@ -60,14 +62,7 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
-        <Route
-          path="*"
-          element={
-            <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER]}>
-              <EntitiesRoutes />
-            </PrivateRoute>
-          }
-        />
+        <Route path="entities/*" element={<EntitiesRoutes />} />
         <Route path="*" element={<PageNotFound />} />
       </ErrorBoundaryRoutes>
     </div>
