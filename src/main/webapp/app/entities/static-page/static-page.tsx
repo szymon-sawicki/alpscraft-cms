@@ -96,10 +96,6 @@ export const StaticPage = () => {
                   <Translate contentKey="alpscraftCmsApp.staticPage.title">Title</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('title')} />
                 </th>
-                <th className="hand" onClick={sort('content')}>
-                  <Translate contentKey="alpscraftCmsApp.staticPage.content">Content</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('content')} />
-                </th>
                 <th>
                   <Translate contentKey="alpscraftCmsApp.staticPage.author">Author</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -115,7 +111,6 @@ export const StaticPage = () => {
                     </Button>
                   </td>
                   <td>{staticPage.title}</td>
-                  <td>{staticPage.content}</td>
                   <td>{staticPage.author ? staticPage.author.id : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

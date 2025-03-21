@@ -5,6 +5,7 @@ package at.alpscraft.domain.enumeration;
  */
 public enum SectionType {
     HEADER,
+    MENU_TOP,
     MAIN,
     SIDE,
     FOOTER,

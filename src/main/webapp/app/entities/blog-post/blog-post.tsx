@@ -95,10 +95,6 @@ export const BlogPost = () => {
                   <Translate contentKey="alpscraftCmsApp.blogPost.title">Title</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('title')} />
                 </th>
-                <th className="hand" onClick={sort('content')}>
-                  <Translate contentKey="alpscraftCmsApp.blogPost.content.label">Content</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('content')} />
-                </th>
                 <th>
                   <Translate contentKey="alpscraftCmsApp.blogPost.category">Category</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -117,7 +113,6 @@ export const BlogPost = () => {
                     </Button>
                   </td>
                   <td>{blogPost.title}</td>
-                  <td>{blogPost.content}</td>
                   <td>
                     {blogPost.category ? <Link to={`/entities/post-category/${blogPost.category.id}`}>{blogPost.category.id}</Link> : ''}
                   </td>
